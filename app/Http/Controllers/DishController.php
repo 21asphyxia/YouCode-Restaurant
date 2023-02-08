@@ -40,10 +40,18 @@ class DishController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'image',
-            'day' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'day' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday',
         ]);
-
+        
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/images');
+            $image->move($destinationPath, $name);
+            $validated['image'] = $name;
+        }
+        
         $request->user()->dishes()->create($validated);
 
         return redirect(route('dishes.index'));
@@ -89,9 +97,25 @@ class DishController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'day' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:10000',
+            'day' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday',
         ]);
+
+        if($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time().'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path('/images');
+            $image->move($destinationPath, $name);
+            $validated['image'] = $name;
+            if($dish->image != null) {
+                unlink(public_path("/images/{$dish->image}"));
+            }
+        }
+        else {
+            $validated['image'] = $dish->image;
+        }
+
+        
 
         $dish->update($validated);
 
@@ -108,7 +132,12 @@ class DishController extends Controller
     {
         $this->authorize('delete', $dish);
 
+        if($dish->image != null) {
+            unlink(public_path("/images/{$dish->image}"));
+        }
+
         $dish->delete();
+
 
         return redirect(route('dishes.index'));
     }

@@ -1,6 +1,6 @@
 <!-- Dish add form -->
 <x-app-layout>
-    <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div class="mx-auto p-4 sm:p-6 lg:p-8">
         {{-- add button --}}
             <div class="flex-shrink-0 flex justify-end">
                 <form method="GET" action="{{ route('dishes.create') }}">
@@ -10,14 +10,14 @@
             </div>
         <div class="mt-6 bg-white shadow-sm rounded-lg divide-y">
             @foreach ($dishes as $dish)
-                <div class="p-6 flex space-x-2 items-center flex-wrap space-y-6">
+                <div class="p-6 flex space-x-2 items-center justify-center flex-wrap space-y-6">
                     <div class="flex-shrink-0">
-                        <img class="h-12 w-12 rounded-full" src="{{ $dish->image }}" alt="{{ $dish->name }}">
+                        <img class="h-24" src="{{ 'images/' . $dish->image }}" alt="{{ $dish->name }}" />
                     </div>
-                    <div class="flex-1">
-                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ $dish->name }}</h3>
-                        <p class="mt-1 text-sm leading-5 text-gray-500">{{ $dish->description }}</p>
-                        <p class="text-sm leading-5 text-gray-500">{{ $dish->day }}</p>
+                    <div class="flex flex-col w-full">
+                        <h3 class="text-lg text-center font-medium leading-6 text-gray-900">{{ $dish->name }}</h3>
+                        <p class="mt-1 truncate text-center text-sm leading-5 text-gray-500">{{ $dish->description}}</p>
+                        <p class="text-sm text-center leading-5 text-gray-500">{{ $dish->day }}</p>
                     </div>
                     <div class="flex-shrink-0">
                         <p class="text-sm leading-5 text-gray-500">{{ $dish->user->name }}</p>
