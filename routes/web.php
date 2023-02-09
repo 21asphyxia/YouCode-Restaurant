@@ -17,7 +17,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'dishes' => Dish::all()
+    ]);
 });
 
 Route::get('/dashboard', function () {
@@ -31,7 +33,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('dishes', DishController::class)
-    ->only(['index', 'create', 'store', 'edit' , 'update', 'destroy'])
+    ->only(['index','show', 'create', 'store', 'edit' , 'update', 'destroy'])
     ->middleware('auth');
 
 require __DIR__.'/auth.php';
