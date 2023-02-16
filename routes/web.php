@@ -32,8 +32,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::resource('dishes', DishController::class)
+        ->only(['index','create', 'store', 'edit' , 'update', 'destroy']);
+});
+
 Route::resource('dishes', DishController::class)
-    ->only(['index','show', 'create', 'store', 'edit' , 'update', 'destroy'])
-    ->middleware('auth');
+    ->only(['show']);
 
 require __DIR__.'/auth.php';
